@@ -6,8 +6,8 @@ import '../bloc/recipes/recipes.dart';
 
 Future<void> init(GetIt injector) async {
   injector.registerLazySingleton<RecipesCubit>(
-          () => RecipesCubit(/*viewModel: injector.get(),
-              accountRepository: injector.get()*/));
+          () => RecipesCubit(viewModel: injector.get(),
+              repository: injector.get()));
 }
 
  

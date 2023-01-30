@@ -1,4 +1,7 @@
 
+import '../../models/data_models/ingredient.dart';
+import '../../models/data_models/recipe.dart';
+
 abstract class RecipesStates{
   const RecipesStates();
 }
@@ -9,20 +12,19 @@ class InitialState extends RecipesStates {
 }
 
 class Loading extends RecipesStates {
-  @override
-  List<Object> get props => [];
+}
+
+class IngredientsLoaded extends RecipesStates {
+  final List<Ingredient> ingredient;
+  const IngredientsLoaded(this.ingredient);
 }
 
 class RecipesLoaded extends RecipesStates {
-  final List recipes;
+  final List<Recipe> recipes;
   const RecipesLoaded(this.recipes);
-  @override
-  List<Object> get props => [recipes];
 }
 
 class RecipesNetworkErr extends RecipesStates {
   final String? message;
   const RecipesNetworkErr(this.message);
-  @override
-  List<Object> get props => [message!];
 }

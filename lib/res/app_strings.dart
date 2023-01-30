@@ -1,4 +1,6 @@
 
+import '../models/data_models/ingredient.dart';
+
 class AppStrings {
   static const String appName = 'Klasha Recipes';
 
@@ -7,8 +9,10 @@ class AppStrings {
   /// Base
   static const String baseUrl = 'https://lb7u7svcm5.execute-api.ap-southeast-1.amazonaws.com/dev';
 
-  static String fetchRecipesUrl(List<String> ingredients)
-  => '$baseUrl/recipes?ingredients=${ingredients.join(',')}';
+  static const String fetchIngredientsUrl = '$baseUrl/ingredients';
+  static String fetchRecipesUrl(List<Ingredient> ingredients)
+  => '$baseUrl/recipes?ingredients=${ingredients.fold([],
+          (previousValue, i) => previousValue..add(i.title)).join(',')}';
 
 
 }
