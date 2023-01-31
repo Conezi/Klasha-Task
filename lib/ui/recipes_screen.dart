@@ -42,7 +42,7 @@ class _RecipesScreenState extends State<RecipesScreen> {
                 disposeViewModel: false,
                 builder: (widget, viewModel, child){
                   if(state is Loading){
-                    return const LoadingPage(length: 10);
+                    return const LoadingPage();
                   }
                   if(viewModel.recipes.isEmpty){
                     return Center(

@@ -70,7 +70,7 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                     disposeViewModel: false,
                     builder: (widget, viewModel, child){
                       if(state is Loading && viewModel.ingredients.isEmpty){
-                        return const LoadingPage(length: 10);
+                        return const LoadingPage();
                       }
                       if(viewModel.ingredients.isEmpty){
                         return Expanded(
