@@ -10,10 +10,6 @@ import '../../res/app_strings.dart';
 import 'exceptions.dart';
 
 class HttpHelper {
-  HttpHelper._();
-  static final _instance = HttpHelper._();
-  static HttpHelper get instance => _instance;
-
   Future<dynamic> get(String route, {Map<String, String>? headers}) async {
     late dynamic map;
     debugPrint(route);

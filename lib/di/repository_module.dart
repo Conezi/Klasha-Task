@@ -8,7 +8,7 @@ import '../requests/repositories/recipes_repository/recipes_repository_impl.dart
 
 Future<void> init(GetIt injector) async {
   injector.registerLazySingleton<RecipesRepository>(
-      () => RecipesRepositoryImpl());
+      () => RecipesRepositoryImpl(injector.get()));
 }
 
  
