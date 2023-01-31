@@ -21,14 +21,14 @@ class AppTheme {
         primary: AppColors.lightSecondaryAccent,
       ),
       appBarTheme: AppBarTheme(
-          elevation: 0.0,
-          titleTextStyle: ThemeData.light()
+          elevation: 1.0,
+          titleTextStyle: ThemeData.dark()
               .textTheme
               .headline6!
-              .copyWith(fontSize: 18,
+              .copyWith(fontSize: 24,
               fontWeight: FontWeight.w700),
           iconTheme: ThemeData.light().iconTheme,
-          color: AppColors.lightPrimary,
+          color: AppColors.lightSecondaryAccent,
           systemOverlayStyle: const SystemUiOverlayStyle(
             statusBarBrightness: Brightness.light,
           )),

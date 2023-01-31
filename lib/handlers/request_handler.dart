@@ -34,40 +34,9 @@ class RequestHandler{
     }
   }
 
-  static Future<String> handleStreamedServerError(StreamedResponse response) async{
-    List res=[];
-    await response.stream.forEach((message) {
-      res.add(String.fromCharCodes(message));
-      debugPrint(String.fromCharCodes(message));
-    });
-    AppHandler.logPrint("Response status: ${response.statusCode}");
-    AppHandler.logPrint("Response body: ${res.join('')}");
-    final map=json.decode(res.join(''));
-
-    switch(response.statusCode){
-      case 201:
-        return res.join('');
-      case 200:
-        return res.join('');
-      case 400:
-      throw BadRequestException(handleApiError(map));
-      case 401:
-      case 403:
-      throw UnauthorisedException(handleApiError(map));
-      case 404:
-     throw FileNotFoundException(handleApiError(map));
-      case 422:
-      throw AlreadyRegisteredException(handleApiError(map));
-      case 500:
-        throw NetworkException(response.reasonPhrase ?? 'Network error');
-      default:
-        throw NetworkException('Network error');
-    }
-  }
-
   static String handleApiError(Map map){
     try{
-      return map["errors"] as String;
+      return map["message"] as String;
     } catch (e){
       debugPrint(e.toString());
       return map.toString();
