@@ -9,10 +9,10 @@ import '../../handlers/request_handler.dart';
 import '../../res/app_strings.dart';
 import 'exceptions.dart';
 
-class Requests {
-  Requests._();
-  static final _instance = Requests._();
-  static Requests get instance => _instance;
+class HttpHelper {
+  HttpHelper._();
+  static final _instance = HttpHelper._();
+  static HttpHelper get instance => _instance;
 
   Future<dynamic> get(String route, {Map<String, String>? headers}) async {
     late dynamic map;

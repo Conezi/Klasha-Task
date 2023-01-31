@@ -4,7 +4,9 @@ import 'package:stacked/stacked.dart';
 
 import '../../di/injection.dart';
 import '../bloc/recipes/recipes.dart';
+import '../models/data_models/ingredient.dart';
 import '../models/view_models/recipes_view_model.dart';
+import '../res/app_routes.dart';
 import '../utils/date_time_util.dart';
 import 'widget/custom_date_picker.dart';
 import 'widget/loading_page.dart';
@@ -17,6 +19,8 @@ class IngredientsScreen extends StatefulWidget {
 }
 
 class _IngredientsScreenState extends State<IngredientsScreen> {
+
+  List<Ingredient>  _selectedIngredients = [];
 
   DateTime _selectedDate = DateTime.now();
 
@@ -33,7 +37,6 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('Ingredient'),
-          centerTitle: true,
           actions: [
             CustomDatePicker(
                 initialDate: _selectedDate,
@@ -101,28 +104,124 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                             padding: const EdgeInsets.symmetric(vertical: 15.0),
                             itemCount: viewModel.ingredients.length,
                             separatorBuilder: (context, int index)=> const Divider(),
-                            itemBuilder: (context, int index)
-                            => ListTile(
-                              leading: Container(
-                                  width: 50,
-                                  decoration: BoxDecoration(
-                                      borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                                      color: Theme.of(context).shadowColor.withOpacity(0.1))),
-                              title: Text(viewModel.ingredients[index].title,
-                                  style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700)),
-                              subtitle: Text(DateTimeUtil.dateFormat.format(
-                                  viewModel.ingredients[index].useBy),
-                                  style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w700)),
-                            )),
+                            itemBuilder: (context, int index){
+                              final ingredient = viewModel.ingredients[index];
+                              return ListTile(
+                                onTap: (){
+                                  //Todo: uncomment when api returns current data
+                                  /*if(ingredient.useBy.isBefore(DateTime.now())){
+                                    ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
+                                        SnackBar(content: Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: const [
+                                            Icon(Icons.warning, color: AppColors.red),
+                                            SizedBox(width: 5),
+                                            Text(
+                                                'Ingredient is past use by date',
+                                                textAlign: TextAlign.center),
+                                          ],
+                                        ), duration: const Duration(seconds: 2),));
+                                    return;
+                                  }*/
+                                  setState((){
+                                    if(_selectedIngredients.contains(ingredient)){
+                                      _selectedIngredients.remove(ingredient);
+                                    }else{
+                                      _selectedIngredients.add(ingredient);
+                                    }
+                                  });
+                                },
+                                selected: _selectedIngredients.contains(ingredient),
+                                leading: Container(
+                                    width: 50,
+                                    decoration: BoxDecoration(
+                                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                                        color: Theme.of(context).shadowColor.withOpacity(0.1))),
+                                title: Text(ingredient.title,
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700)),
+                                subtitle: Text(DateTimeUtil.dateFormat.format(
+                                    ingredient.useBy),
+                                    style: TextStyle(
+                                        fontSize: 16)),
+                              );
+                            }),
                       );
                     }
                 )),
           ],
-        )
+        ),
+      bottomNavigationBar : Builder(
+        builder: (context) {
+          if(_selectedIngredients.isEmpty){
+            return const SizedBox.shrink();
+          }
+          return Container(
+              padding: const EdgeInsets.symmetric(vertical: 25.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(16.0)
+                ),
+                boxShadow: <BoxShadow>[
+                  BoxShadow(
+                    color: Theme.of(context).shadowColor,
+                    blurRadius: 10,
+                  ),
+                ],
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    children: List.generate(_selectedIngredients.length, (index) => InkWell(
+                      onTap: ()=>setState(()=>_selectedIngredients.remove(_selectedIngredients[index])),
+                      child: Container(
+                        padding: const EdgeInsets.all(5.0),
+                        margin: const EdgeInsets.all(2.0),
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16.0),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('${_selectedIngredients[index].title}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 14,
+                                  color: Theme.of(context).colorScheme.secondary
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            Icon(
+                              Icons.cancel,
+                              size: 15,
+                            )
+                          ],
+                        ),
+                      ),
+                    )),
+                  ),
+                   const SizedBox(height: 15),
+                   Container(
+                     width: double.maxFinite,
+                     margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                     child: ElevatedButton(
+                         child: Text('Get Recipes'),
+                         onPressed: (){
+                         Navigator.pushNamed(context, AppRoutes.recipesScreen,
+                         arguments: _selectedIngredients);
+                         setState(()=> _selectedIngredients.clear());
+                     }),
+                   )
+                ],
+              )
+          );
+        }
+      ),
     );
   }
 
