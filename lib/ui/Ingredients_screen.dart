@@ -6,6 +6,7 @@ import '../../di/injection.dart';
 import '../bloc/recipes/recipes.dart';
 import '../models/view_models/recipes_view_model.dart';
 import '../utils/date_time_util.dart';
+import 'widget/custom_date_picker.dart';
 import 'widget/loading_page.dart';
 
 class IngredientsScreen extends StatefulWidget {
@@ -16,6 +17,8 @@ class IngredientsScreen extends StatefulWidget {
 }
 
 class _IngredientsScreenState extends State<IngredientsScreen> {
+
+  DateTime _selectedDate = DateTime.now();
 
   final _recipesCubit = injector.get<RecipesCubit>();
 
@@ -31,57 +34,87 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
         appBar: AppBar(
           title: const Text('Ingredient'),
           centerTitle: true,
+          actions: [
+            CustomDatePicker(
+                initialDate: _selectedDate,
+                onSelected: onDateSelected)
+          ],
         ),
-        body: BlocBuilder<RecipesCubit, RecipesStates>(
-            bloc: _recipesCubit,
-            builder: (context, state) => ViewModelBuilder<RecipesViewModel>.reactive(
-                viewModelBuilder: () => _recipesCubit.viewModel,
-                disposeViewModel: false,
-                builder: (widget, viewModel, child){
-                  if(state is Loading && viewModel.ingredient.isEmpty){
-                    return const LoadingPage(length: 10);
-                  }
-                  if(viewModel.ingredient.isEmpty){
-                    return const Text(
-                      'No Ingredients available for selected date'
-                    );
-                  }
-                  return Column(
-                      children: [
-                        const SizedBox(height: 15),
-                        Expanded(
-                          child: ListView.separated(
-                              physics: const BouncingScrollPhysics(),
-                              padding: const EdgeInsets.symmetric(vertical: 15.0),
-                              itemCount: viewModel.ingredient.length,
-                              separatorBuilder: (context, int index)=> const Divider(),
-                              itemBuilder: (context, int index)
-                              => ListTile(
-                                leading: Container(
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                                        color: Theme.of(context).shadowColor.withOpacity(0.1))),
-                                title: Text(viewModel.ingredient[index].title,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700)),
-                                subtitle: Text(DateTimeUtil.dateFormat.format(
-                                    viewModel.ingredient[index].useBy),
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w700)),
-                              )),
-                        )
-                      ]
-                  );
-                }
-            ))
+        body: Column(
+          children: [
+            const SizedBox(height: 15),
+            Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Theme.of(context).shadowColor
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 30.0, vertical: 8),
+                child: Text(
+                  DateTimeUtil.dateFormat.format(_selectedDate),
+                  style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).textTheme.caption!.color,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            BlocBuilder<RecipesCubit, RecipesStates>(
+                bloc: _recipesCubit,
+                builder: (context, state) => ViewModelBuilder<RecipesViewModel>.reactive(
+                    viewModelBuilder: () => _recipesCubit.viewModel,
+                    disposeViewModel: false,
+                    builder: (widget, viewModel, child){
+                      if(state is Loading && viewModel.ingredients.isEmpty){
+                        return const LoadingPage(length: 10);
+                      }
+                      if(viewModel.ingredients.isEmpty){
+                        return Expanded(
+                          child: Center(
+                            child: Text(
+                              'No Ingredients available for ${DateTimeUtil.dateFormat.format(_selectedDate)}',
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Theme.of(context).textTheme.caption!.color),
+                            ),
+                          ),
+                        );
+                      }
+                      return Expanded(
+                        child: ListView.separated(
+                            physics: const BouncingScrollPhysics(),
+                            padding: const EdgeInsets.symmetric(vertical: 15.0),
+                            itemCount: viewModel.ingredients.length,
+                            separatorBuilder: (context, int index)=> const Divider(),
+                            itemBuilder: (context, int index)
+                            => ListTile(
+                              leading: Container(
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(Radius.circular(5.0)),
+                                      color: Theme.of(context).shadowColor.withOpacity(0.1))),
+                              title: Text(viewModel.ingredients[index].title,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700)),
+                              subtitle: Text(DateTimeUtil.dateFormat.format(
+                                  viewModel.ingredients[index].useBy),
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700)),
+                            )),
+                      );
+                    }
+                )),
+          ],
+        )
     );
   }
 
-  void onFilterSelected(DateTime date) {
-
+  void onDateSelected(DateTime date) {
+    setState(()=> _selectedDate = date);
+    _recipesCubit.viewModel.setFilterIngredient(date);
   }
 
 }
