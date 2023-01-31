@@ -72,11 +72,25 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                       if(viewModel.ingredients.isEmpty){
                         return Expanded(
                           child: Center(
-                            child: Text(
-                              'No Ingredients available for ${DateTimeUtil.dateFormat.format(_selectedDate)}',
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Theme.of(context).textTheme.caption!.color),
+                            child: Padding(
+                              padding: const EdgeInsets.all(15.0),
+                              child: Text.rich(
+                                TextSpan(
+                                  text: 'No Ingredients available for ${DateTimeUtil.dateFormat.format(_selectedDate)}',
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: Theme.of(context).textTheme.bodyText1!.color),
+                                  children: [
+                                    TextSpan(
+                                        text: '\ntry 25 Nov, 2020, 06 Nov, 2019',
+                                        style: TextStyle(
+                                            fontSize: 14,
+                                            height: 2,
+                                            color: Theme.of(context).textTheme.caption!.color)
+                                    )
+                                  ]
+                                ),
+                                textAlign: TextAlign.center),
                             ),
                           ),
                         );
