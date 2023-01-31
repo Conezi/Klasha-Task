@@ -1,94 +1,99 @@
 import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
+import 'package:tech_task/bloc/recipes/recipes.dart';
+import 'package:tech_task/models/data_models/ingredient.dart';
+import 'package:tech_task/models/data_models/recipe.dart';
+import 'package:tech_task/requests/utils/exceptions.dart';
 
 import '../data_factory/recipes_data_factory.dart';
 import '../mocks/repository_mocks/mock_recipes_repository.dart';
 import '../mocks/view_model_mocks/mock_user_view_model.dart';
 
 void main() {
-/*  TestWidgetsFlutterBinding.ensureInitialized();
+  TestWidgetsFlutterBinding.ensureInitialized();
 
-  late MockRecipesRepository accountRepository;
-  late MockRecipesViewModel userViewModel;
-  late AccountCubit accountCubit;
+  late MockRecipesRepository recipesRepository;
+  late MockRecipesViewModel recipesViewModel;
+  late RecipesCubit recipesCubit;
 
-  final validData = SuccessResponse<UserData>.fromMap(RecipesDataFactory.agentData,
-      data: UserData.fromMap(RecipesDataFactory.agentData['data']));
-
-  final invalidData = SuccessResponse<UserData>.fromMap(
-      RecipesDataFactory.customerData,
-      data: UserData.fromMap(RecipesDataFactory.customerData['data']));
+  final ingredients = List<Ingredient>.from(
+      RecipesDataFactory.ingredients.map((x) => Ingredient.fromMap(x)));
+  final recipes = List<Recipe>.from(RecipesDataFactory.recipes.map((x) => Recipe.fromMap(x)));
 
   setUp(() {
-    accountRepository = MockRecipesRepository();
-    userViewModel = MockRecipesViewModel();
-    accountCubit =
-        AccountCubit(repository: accountRepository, viewModel: userViewModel);
+    recipesRepository = MockRecipesRepository();
+    recipesViewModel = MockRecipesViewModel();
+    recipesCubit = RecipesCubit(
+        repository: recipesRepository,
+        viewModel: recipesViewModel);
   });
 
   tearDown(() {
-    accountCubit.close();
-    userViewModel.dispose();
+    recipesCubit.close();
+    recipesViewModel.dispose();
   });
 
-  group('Test Login Cubit ', () {
+  group('Test fetch ingredients in recipes cubit ', () {
     blocTest(
-        'emits [AccountProcessing(), AccountLoaded()]'
-        ' when request was successful and has a valid user data',
+        'emits [Loading(), IngredientsLoaded()]'
+        ' when request was successful and has a valid data',
         build: () {
-          when(() => accountRepository.loginUser(
-              email: any(named: 'email'),
-              password: any(named: 'password'))).thenAnswer(
-            (_) => Future.value(validData),
+          when(() => recipesRepository.fetchIngredient()).thenAnswer(
+            (_) => Future.value(ingredients),
           );
-          when(() => userViewModel.setUser(validData.data)).thenAnswer(
-            (_) => Future.value(),
+          when(() => recipesViewModel.setIngredient(ingredients)).thenAnswer(
+            (_) => Future.value(ingredients),
           );
-          return accountCubit;
+          return recipesCubit;
         },
-        act: (AccountCubit cubit) {
-          cubit.loginUser(Environment.dev,
-              email: 'email', password: 'password');
-        },
-        expect: () => [AccountProcessing(), AccountLoaded(validData.data)]);
+        act: (RecipesCubit cubit) => cubit.fetchIngredient(),
+        expect: () => [Loading(), IngredientsLoaded(ingredients)]);
 
     blocTest(
-        'emits [AccountProcessing(), AccountNetworkErr()]'
-        ' when request was successful and has a invalid user data',
+        'emits [Loading(), RecipesNetworkErr()]'
+            ' when error occurred while fetching ingredients',
         build: () {
-          when(() => accountRepository.loginUser(
-              email: any(named: 'email'),
-              password: any(named: 'password'))).thenAnswer(
-            (_) => Future.value(invalidData),
-          );
-          return accountCubit;
+          when(() => recipesRepository.fetchIngredient()).thenThrow(
+              NetworkException('An error occurred'));
+          return recipesCubit;
         },
-        act: (AccountCubit cubit) {
-          cubit.loginUser(Environment.dev,
-              email: 'email', password: 'password');
-        },
+        act: (RecipesCubit cubit) => cubit.fetchIngredient(),
         expect: () => [
-              AccountProcessing(),
-              const AccountNetworkErr(ConstantStrings.loginError)
-            ]);
+          Loading(),
+          const RecipesNetworkErr('An error occurred')
+        ]);
+  });
+
+  group('Test fetch recipes in recipes cubit ', () {
+    blocTest(
+        'emits [Loading(), RecipesLoaded()]'
+            ' when request was successful and has a valid data',
+        build: () {
+          when(() => recipesRepository.fetchRecipes([])).thenAnswer(
+                (_) => Future.value(recipes),
+          );
+          when(() => recipesViewModel.setRecipes(recipes)).thenAnswer(
+                (_) => Future.value(recipes),
+          );
+          return recipesCubit;
+        },
+        act: (RecipesCubit cubit) => cubit.fetchRecipes([]),
+        expect: () => [Loading(), RecipesLoaded(recipes)]);
 
     blocTest(
-        'emits [AccountProcessing(), AccountNetworkErr()]'
-        ' when error occurred while login in',
+        'emits [Loading(), RecipesNetworkErr()]'
+            ' when error occurred while fetching recipes',
         build: () {
-          when(() => accountRepository.loginUser(
-              email: any(named: 'email'),
-              password: any(named: 'password'))).thenThrow(ApiException(null));
-          return accountCubit;
+          when(() => recipesRepository.fetchRecipes([])).thenThrow(
+              NetworkException('An error occurred'));
+          return recipesCubit;
         },
-        act: (AccountCubit cubit) {
-          cubit.loginUser(Environment.dev,
-              email: 'email', password: 'password');
-        },
+        act: (RecipesCubit cubit) => cubit.fetchRecipes([]),
         expect: () => [
-              AccountProcessing(),
-              const AccountNetworkErr(ConstantStrings.defaultNetworkError)
-            ]);
-  });*/
+          Loading(),
+          const RecipesNetworkErr('An error occurred')
+        ]);
+  });
+
 }
