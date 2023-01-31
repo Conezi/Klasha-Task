@@ -19,8 +19,7 @@ class IngredientsScreen extends StatefulWidget {
 }
 
 class _IngredientsScreenState extends State<IngredientsScreen> {
-
-  List<Ingredient>  _selectedIngredients = [];
+  List<Ingredient> _selectedIngredients = [];
 
   DateTime _selectedDate = DateTime.now();
 
@@ -35,81 +34,88 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('Ingredient'),
-          actions: [
-            CustomDatePicker(
-                initialDate: _selectedDate,
-                onSelected: onDateSelected)
-          ],
-        ),
-        body: Column(
-          children: [
-            const SizedBox(height: 15),
-            Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Theme.of(context).shadowColor
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 30.0, vertical: 8),
-                child: Text(
-                  DateTimeUtil.dateFormat.format(_selectedDate),
-                  style: TextStyle(
-                      fontSize: 14,
-                      color: Theme.of(context).textTheme.caption!.color,
-                      fontWeight: FontWeight.bold),
-                ),
+      appBar: AppBar(
+        title: const Text('Ingredient'),
+        actions: [
+          CustomDatePicker(
+              initialDate: _selectedDate, onSelected: onDateSelected)
+        ],
+      ),
+      body: Column(
+        children: [
+          const SizedBox(height: 15),
+          Container(
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(20)),
+                color: Theme.of(context).shadowColor),
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30.0, vertical: 8),
+              child: Text(
+                DateTimeUtil.dateFormat.format(_selectedDate),
+                style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context).textTheme.caption!.color,
+                    fontWeight: FontWeight.bold),
               ),
             ),
-            BlocBuilder<RecipesCubit, RecipesStates>(
-                bloc: _recipesCubit,
-                builder: (context, state) => ViewModelBuilder<RecipesViewModel>.reactive(
-                    viewModelBuilder: () => _recipesCubit.viewModel,
-                    disposeViewModel: false,
-                    builder: (widget, viewModel, child){
-                      if(state is Loading && viewModel.ingredients.isEmpty){
-                        return const LoadingPage();
-                      }
-                      if(viewModel.ingredients.isEmpty){
-                        return Expanded(
-                          child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(15.0),
-                              child: Text.rich(
-                                TextSpan(
-                                  text: 'No Ingredients available for ${DateTimeUtil.dateFormat.format(_selectedDate)}',
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        color: Theme.of(context).textTheme.bodyText1!.color),
-                                  children: [
+          ),
+          BlocBuilder<RecipesCubit, RecipesStates>(
+              bloc: _recipesCubit,
+              builder: (context, state) =>
+                  ViewModelBuilder<RecipesViewModel>.reactive(
+                      viewModelBuilder: () => _recipesCubit.viewModel,
+                      disposeViewModel: false,
+                      builder: (widget, viewModel, child) {
+                        if (state is Loading && viewModel.ingredients.isEmpty) {
+                          return const LoadingPage();
+                        }
+                        if (viewModel.ingredients.isEmpty) {
+                          return Expanded(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Text.rich(
                                     TextSpan(
-                                        text: '\ntry 25 Nov, 2020, 06 Nov, 2019',
+                                        text:
+                                            'No Ingredients available for ${DateTimeUtil.dateFormat.format(_selectedDate)}',
                                         style: TextStyle(
-                                            fontSize: 14,
-                                            height: 2,
-                                            color: Theme.of(context).textTheme.caption!.color)
-                                    )
-                                  ]
-                                ),
-                                textAlign: TextAlign.center),
+                                            fontSize: 16,
+                                            color: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1!
+                                                .color),
+                                        children: [
+                                          TextSpan(
+                                              text:
+                                                  '\ntry 25 Nov, 2020, 06 Nov, 2019',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  height: 2,
+                                                  color: Theme.of(context)
+                                                      .textTheme
+                                                      .caption!
+                                                      .color))
+                                        ]),
+                                    textAlign: TextAlign.center),
+                              ),
                             ),
-                          ),
-                        );
-                      }
-                      return Expanded(
-                        child: ListView.separated(
-                            physics: const BouncingScrollPhysics(),
-                            padding: const EdgeInsets.symmetric(vertical: 15.0),
-                            itemCount: viewModel.ingredients.length,
-                            separatorBuilder: (context, int index)=> const Divider(),
-                            itemBuilder: (context, int index){
-                              final ingredient = viewModel.ingredients[index];
-                              return ListTile(
-                                onTap: (){
-                                  //Todo: uncomment when api returns current data
-                                  /*if(ingredient.useBy.isBefore(DateTime.now())){
+                          );
+                        }
+                        return Expanded(
+                          child: ListView.separated(
+                              physics: const BouncingScrollPhysics(),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              itemCount: viewModel.ingredients.length,
+                              separatorBuilder: (context, int index) =>
+                                  const Divider(),
+                              itemBuilder: (context, int index) {
+                                final ingredient = viewModel.ingredients[index];
+                                return ListTile(
+                                  onTap: () {
+                                    //Todo: uncomment when api returns current data
+                                    /*if(ingredient.useBy.isBefore(DateTime.now())){
                                     ScaffoldMessenger.of(context)..removeCurrentSnackBar()..showSnackBar(
                                         SnackBar(content: Row(
                                           mainAxisAlignment: MainAxisAlignment.center,
@@ -123,111 +129,118 @@ class _IngredientsScreenState extends State<IngredientsScreen> {
                                         ), duration: const Duration(seconds: 2),));
                                     return;
                                   }*/
-                                  setState((){
-                                    if(_selectedIngredients.contains(ingredient)){
-                                      _selectedIngredients.remove(ingredient);
-                                    }else{
-                                      _selectedIngredients.add(ingredient);
-                                    }
-                                  });
-                                },
-                                selected: _selectedIngredients.contains(ingredient),
-                                leading: Container(
-                                    width: 50,
-                                    decoration: BoxDecoration(
-                                        borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                                        color: Theme.of(context).shadowColor.withOpacity(0.1))),
-                                title: Text(ingredient.title,
-                                    style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w700)),
-                                subtitle: Text(DateTimeUtil.dateFormat.format(
-                                    ingredient.useBy),
-                                    style: TextStyle(
-                                        fontSize: 16)),
-                              );
-                            }),
-                      );
-                    }
-                )),
-          ],
-        ),
-      bottomNavigationBar : Builder(
-        builder: (context) {
-          if(_selectedIngredients.isEmpty){
-            return const SizedBox.shrink();
-          }
-          return Container(
-              padding: const EdgeInsets.symmetric(vertical: 25.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).canvasColor,
-                borderRadius: const BorderRadius.vertical(
-                    top: Radius.circular(16.0)
+                                    setState(() {
+                                      if (_selectedIngredients
+                                          .contains(ingredient)) {
+                                        _selectedIngredients.remove(ingredient);
+                                      } else {
+                                        _selectedIngredients.add(ingredient);
+                                      }
+                                    });
+                                  },
+                                  selected:
+                                      _selectedIngredients.contains(ingredient),
+                                  leading: Container(
+                                      width: 50,
+                                      decoration: BoxDecoration(
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(5.0)),
+                                          color: Theme.of(context)
+                                              .shadowColor
+                                              .withOpacity(0.1))),
+                                  title: Text(ingredient.title,
+                                      style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w700)),
+                                  subtitle: Text(
+                                      DateTimeUtil.dateFormat
+                                          .format(ingredient.useBy),
+                                      style: TextStyle(fontSize: 16)),
+                                );
+                              }),
+                        );
+                      })),
+        ],
+      ),
+      bottomNavigationBar: Builder(builder: (context) {
+        if (_selectedIngredients.isEmpty) {
+          return const SizedBox.shrink();
+        }
+        return Container(
+            padding: const EdgeInsets.symmetric(vertical: 25.0),
+            decoration: BoxDecoration(
+              color: Theme.of(context).canvasColor,
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(16.0)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: Theme.of(context).shadowColor,
+                  blurRadius: 10,
                 ),
-                boxShadow: <BoxShadow>[
-                  BoxShadow(
-                    color: Theme.of(context).shadowColor,
-                    blurRadius: 10,
-                  ),
-                ],
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Wrap(
-                    alignment: WrapAlignment.center,
-                    children: List.generate(_selectedIngredients.length, (index) => InkWell(
-                      onTap: ()=>setState(()=>_selectedIngredients.remove(_selectedIngredients[index])),
-                      child: Container(
-                        padding: const EdgeInsets.all(5.0),
-                        margin: const EdgeInsets.all(2.0),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16.0),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text('${_selectedIngredients[index].title}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: 14,
-                                  color: Theme.of(context).colorScheme.secondary
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: List.generate(
+                      _selectedIngredients.length,
+                      (index) => InkWell(
+                            onTap: () => setState(() => _selectedIngredients
+                                .remove(_selectedIngredients[index])),
+                            child: Container(
+                              padding: const EdgeInsets.all(5.0),
+                              margin: const EdgeInsets.all(2.0),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .secondary
+                                    .withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(16.0),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(
+                                    '${_selectedIngredients[index].title}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .secondary),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Icon(
+                                    Icons.cancel,
+                                    size: 15,
+                                  )
+                                ],
                               ),
                             ),
-                            const SizedBox(width: 5),
-                            Icon(
-                              Icons.cancel,
-                              size: 15,
-                            )
-                          ],
-                        ),
-                      ),
-                    )),
-                  ),
-                   const SizedBox(height: 15),
-                   Container(
-                     width: double.maxFinite,
-                     margin: const EdgeInsets.symmetric(horizontal: 15.0),
-                     child: ElevatedButton(
-                         child: Text('Get Recipes'),
-                         onPressed: (){
-                         Navigator.pushNamed(context, AppRoutes.recipesScreen,
-                         arguments: _selectedIngredients);
-                         setState(()=> _selectedIngredients.clear());
-                     }),
-                   )
-                ],
-              )
-          );
-        }
-      ),
+                          )),
+                ),
+                const SizedBox(height: 15),
+                Container(
+                  width: double.maxFinite,
+                  margin: const EdgeInsets.symmetric(horizontal: 15.0),
+                  child: ElevatedButton(
+                      child: Text('Get Recipes'),
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.recipesScreen,
+                            arguments: _selectedIngredients);
+                        setState(() => _selectedIngredients.clear());
+                      }),
+                )
+              ],
+            ));
+      }),
     );
   }
 
   void onDateSelected(DateTime date) {
-    setState(()=> _selectedDate = date);
+    setState(() => _selectedDate = date);
     _recipesCubit.viewModel.setFilterIngredient(date);
   }
-
 }

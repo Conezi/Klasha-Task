@@ -4,7 +4,6 @@ import '../data_models/recipe.dart';
 import 'base_viewmodel.dart';
 
 class RecipesViewModel extends BaseViewModel {
-
   List<Ingredient> _ingredients = [];
   List<Ingredient> _filteredIngredients = [];
 
@@ -16,8 +15,12 @@ class RecipesViewModel extends BaseViewModel {
   }
 
   Future<void> setFilterIngredient(DateTime date) async {
-    _filteredIngredients = _ingredients.where((i) => i.useBy.day == date.day
-        && i.useBy.month == date.month && i.useBy.year == date.year).toList();
+    _filteredIngredients = _ingredients
+        .where((i) =>
+            i.useBy.day == date.day &&
+            i.useBy.month == date.month &&
+            i.useBy.year == date.year)
+        .toList();
     setViewState(ViewState.success);
   }
 
@@ -29,5 +32,4 @@ class RecipesViewModel extends BaseViewModel {
   List<Ingredient> get ingredients => _filteredIngredients;
 
   List<Recipe> get recipes => _recipes;
-
 }

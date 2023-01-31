@@ -28,5 +28,4 @@ class AppColors {
     800: Color.fromRGBO(19, 154, 67, .9),
     900: Color.fromRGBO(19, 154, 67, 1),
   };
-
 }

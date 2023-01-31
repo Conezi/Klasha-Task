@@ -25,8 +25,7 @@ class AppTheme {
           titleTextStyle: ThemeData.dark()
               .textTheme
               .headline6!
-              .copyWith(fontSize: 24,
-              fontWeight: FontWeight.w700),
+              .copyWith(fontSize: 24, fontWeight: FontWeight.w700),
           iconTheme: ThemeData.light().iconTheme,
           color: AppColors.lightSecondaryAccent,
           systemOverlayStyle: const SystemUiOverlayStyle(

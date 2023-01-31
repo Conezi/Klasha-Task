@@ -6,14 +6,13 @@ import 'package:http/http.dart';
 import '../requests/utils/exceptions.dart';
 import 'app_handler.dart';
 
-class RequestHandler{
-
-  static String handleServerError(Response response){
+class RequestHandler {
+  static String handleServerError(Response response) {
     AppHandler.logPrint("Response status: ${response.statusCode}");
     AppHandler.logPrint("Response body: ${response.body}");
-    final map=json.decode(response.body);
+    final map = json.decode(response.body);
 
-    switch(response.statusCode){
+    switch (response.statusCode) {
       case 201:
         return response.body;
       case 200:
@@ -28,19 +27,18 @@ class RequestHandler{
       case 422:
         throw AlreadyRegisteredException(handleApiError(map));
       case 500:
-        throw NetworkException(response.reasonPhrase?? 'Network error');
+        throw NetworkException(response.reasonPhrase ?? 'Network error');
       default:
         throw NetworkException('Network error');
     }
   }
 
-  static String handleApiError(Map map){
-    try{
+  static String handleApiError(Map map) {
+    try {
       return map["message"] as String;
-    } catch (e){
+    } catch (e) {
       debugPrint(e.toString());
       return map.toString();
     }
   }
-
 }

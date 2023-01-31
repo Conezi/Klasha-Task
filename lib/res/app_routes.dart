@@ -5,8 +5,6 @@ import '../ui/Ingredients_screen.dart';
 import '../ui/recipes_screen.dart';
 import '../ui/splash_screen.dart';
 
-
-
 class AppRoutes {
   ///Route names used through out the app will be specified as static constants here in this format
   static const String splashScreen = 'splashScreen';
@@ -26,7 +24,8 @@ class AppRoutes {
       case splashScreen:
         return MaterialPageRoute(builder: (context) => const SplashScreen());
       case ingredientsScreen:
-        return MaterialPageRoute(builder: (context) => const IngredientsScreen());
+        return MaterialPageRoute(
+            builder: (context) => const IngredientsScreen());
       case recipesScreen:
         return MaterialPageRoute(builder: (context) => const RecipesScreen());
       //Default Route is error route

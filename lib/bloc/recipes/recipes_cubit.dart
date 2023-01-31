@@ -7,55 +7,53 @@ import '../../requests/utils/exceptions.dart';
 import 'recipies_states.dart';
 
 class RecipesCubit extends Cubit<RecipesStates> {
-  RecipesCubit({required this.repository,
-    required this.viewModel}) : super(const InitialState());
+  RecipesCubit({required this.repository, required this.viewModel})
+      : super(const InitialState());
 
   final RecipesRepository repository;
   final RecipesViewModel viewModel;
 
   Future<void> fetchIngredient() async {
-
-    try{
+    try {
       emit(Loading());
 
-      final response=await repository.fetchIngredient();
+      final response = await repository.fetchIngredient();
 
       viewModel.setIngredient(response);
       emit(IngredientsLoaded(response));
-
-    } on ApiException catch(e) {
+    } on ApiException catch (e) {
       emit(RecipesNetworkErr(e.message));
-    }
-    catch(e){
-      if(e is NetworkException
-          || e is BadRequestException || e is UnauthorisedException
-          || e is FileNotFoundException || e is AlreadyRegisteredException){
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
         emit(RecipesNetworkErr(e.toString()));
-      }else{
+      } else {
         rethrow;
       }
     }
   }
 
   Future<void> fetchRecipes(List<Ingredient> ingredients) async {
-
-    try{
+    try {
       emit(Loading());
 
-      final response=await repository.fetchRecipes(ingredients);
+      final response = await repository.fetchRecipes(ingredients);
 
       viewModel.setRecipes(response);
       emit(RecipesLoaded(response));
-
-    } on ApiException catch(e) {
+    } on ApiException catch (e) {
       emit(RecipesNetworkErr(e.message));
-    }
-    catch(e){
-      if(e is NetworkException
-          || e is BadRequestException || e is UnauthorisedException
-          || e is FileNotFoundException || e is AlreadyRegisteredException){
+    } catch (e) {
+      if (e is NetworkException ||
+          e is BadRequestException ||
+          e is UnauthorisedException ||
+          e is FileNotFoundException ||
+          e is AlreadyRegisteredException) {
         emit(RecipesNetworkErr(e.toString()));
-      }else{
+      } else {
         rethrow;
       }
     }

@@ -17,7 +17,6 @@ class RecipesScreen extends StatefulWidget {
 }
 
 class _RecipesScreenState extends State<RecipesScreen> {
-
   final _recipesCubit = injector.get<RecipesCubit>();
 
   @override
@@ -31,57 +30,60 @@ class _RecipesScreenState extends State<RecipesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Recipes'),
-          iconTheme: ThemeData.light().iconTheme.copyWith(
-          color: AppColors.lightBackground
-        )),
+            title: const Text('Recipes'),
+            iconTheme: ThemeData.light()
+                .iconTheme
+                .copyWith(color: AppColors.lightBackground)),
         body: BlocBuilder<RecipesCubit, RecipesStates>(
             bloc: _recipesCubit,
-            builder: (context, state) => ViewModelBuilder<RecipesViewModel>.reactive(
-                viewModelBuilder: () => _recipesCubit.viewModel,
-                disposeViewModel: false,
-                builder: (widget, viewModel, child){
-                  if(state is Loading){
-                    return const LoadingPage();
-                  }
-                  if(viewModel.recipes.isEmpty){
-                    return Center(
-                      child: Padding(
-                        padding: const EdgeInsets.all(15.0),
-                        child: Text(
-                            'No Recipe Found',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 16,
-                                color: Theme.of(context).textTheme.bodyText1!.color)),
-                      ),
-                    );
-                  }
-                  return ListView.separated(
-                      physics: const BouncingScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(vertical: 15.0),
-                      itemCount: viewModel.recipes.length,
-                      separatorBuilder: (context, int index)=> const Divider(),
-                      itemBuilder: (context, int index){
-                        final recipe = viewModel.recipes[index];
-                        return ListTile(
-                          leading: Container(
-                              width: 50,
-                              decoration: BoxDecoration(
-                                  borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-                                  color: Theme.of(context).shadowColor.withOpacity(0.1))),
-                          title: Text(recipe.title,
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700)),
-                          subtitle: Text(recipe.ingredients.join(', '),
-                              style: TextStyle(
-                                  fontSize: 14)),
+            builder: (context, state) =>
+                ViewModelBuilder<RecipesViewModel>.reactive(
+                    viewModelBuilder: () => _recipesCubit.viewModel,
+                    disposeViewModel: false,
+                    builder: (widget, viewModel, child) {
+                      if (state is Loading) {
+                        return const LoadingPage();
+                      }
+                      if (viewModel.recipes.isEmpty) {
+                        return Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(15.0),
+                            child: Text('No Recipe Found',
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    fontSize: 16,
+                                    color: Theme.of(context)
+                                        .textTheme
+                                        .bodyText1!
+                                        .color)),
+                          ),
                         );
-                      });
-                }
-            ))
-    );
+                      }
+                      return ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          padding: const EdgeInsets.symmetric(vertical: 15.0),
+                          itemCount: viewModel.recipes.length,
+                          separatorBuilder: (context, int index) =>
+                              const Divider(),
+                          itemBuilder: (context, int index) {
+                            final recipe = viewModel.recipes[index];
+                            return ListTile(
+                              leading: Container(
+                                  width: 50,
+                                  decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(5.0)),
+                                      color: Theme.of(context)
+                                          .shadowColor
+                                          .withOpacity(0.1))),
+                              title: Text(recipe.title,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w700)),
+                              subtitle: Text(recipe.ingredients.join(', '),
+                                  style: TextStyle(fontSize: 14)),
+                            );
+                          });
+                    })));
   }
-
 }

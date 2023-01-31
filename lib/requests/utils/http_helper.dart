@@ -15,11 +15,11 @@ class HttpHelper {
     debugPrint(route);
     final client = RetryClient(http.Client());
     try {
-      await client.get(Uri.parse(route),
-          headers: headers ?? {'Content-Type': 'application/json'})
+      await client
+          .get(Uri.parse(route),
+              headers: headers ?? {'Content-Type': 'application/json'})
           .then((response) {
         map = json.decode(RequestHandler.handleServerError(response));
-
       });
     } on SocketException {
       throw NetworkException(AppStrings.networkErrorMessage);
@@ -32,5 +32,4 @@ class HttpHelper {
     }
     return map;
   }
-
 }

@@ -23,12 +23,12 @@ class Recipe {
   String toJson() => json.encode(toMap());
 
   factory Recipe.fromMap(Map<String, dynamic> json) => Recipe(
-    title: json["title"],
-    ingredients: List<String>.from(json["ingredients"].map((x) => x)),
-  );
+        title: json["title"],
+        ingredients: List<String>.from(json["ingredients"].map((x) => x)),
+      );
 
   Map<String, dynamic> toMap() => {
-    "title": title,
-    "ingredients": List<dynamic>.from(ingredients.map((x) => x)),
-  };
+        "title": title,
+        "ingredients": List<dynamic>.from(ingredients.map((x) => x)),
+      };
 }

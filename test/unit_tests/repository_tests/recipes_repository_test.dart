@@ -41,25 +41,22 @@ void main() {
 
       test(
         'throws an exception if request fails',
-            () async {
+        () async {
           when(() => mockHttpHelper.get(AppStrings.fetchIngredientsUrl))
               .thenThrow(NetworkException('Request failed'));
-          expect(
-                  () async => await accountRepository.fetchIngredient(),
-              throwsException
-          );
+          expect(() async => await accountRepository.fetchIngredient(),
+              throwsException);
         },
       );
-
     },
   );
 
   group(
     'Test Fetch recipes in the recipes repository implementation class ',
-        () {
+    () {
       test(
         'returns a success state of type [List<Recipe>] if request succeeds',
-            () async {
+        () async {
           when(() => mockHttpHelper.get(AppStrings.fetchRecipesUrl([])))
               .thenAnswer((_) => Future.value(recipes));
 
@@ -72,16 +69,13 @@ void main() {
 
       test(
         'throws an exception if request fails',
-            () async {
+        () async {
           when(() => mockHttpHelper.get(AppStrings.fetchRecipesUrl([])))
               .thenThrow(NetworkException('Request failed'));
-          expect(
-                  () async => await accountRepository.fetchRecipes([]),
-              throwsException
-          );
+          expect(() async => await accountRepository.fetchRecipes([]),
+              throwsException);
         },
       );
-
     },
   );
 }

@@ -13,10 +13,9 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  startTimeout() => Timer(const Duration(seconds: 1), handleTimeout);
 
-  startTimeout()=>Timer(const Duration(seconds: 1), handleTimeout);
-
-  void handleTimeout()=>changeScreen();
+  void handleTimeout() => changeScreen();
 
   Future<void> changeScreen() async {
     Navigator.pushReplacementNamed(context, AppRoutes.ingredientsScreen);
@@ -34,23 +33,19 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Image.asset(
-              AppImages.logo,
-              height: 100,
-              fit: BoxFit.cover),
-            const SizedBox(height: 25),
-            Text(AppStrings.appName,
-                style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.w700,
-                    color: Theme.of(context).colorScheme.secondary))
-          ],
-        ),
-      )
-    );
+        body: Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Image.asset(AppImages.logo, height: 100, fit: BoxFit.cover),
+          const SizedBox(height: 25),
+          Text(AppStrings.appName,
+              style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w700,
+                  color: Theme.of(context).colorScheme.secondary))
+        ],
+      ),
+    ));
   }
 }

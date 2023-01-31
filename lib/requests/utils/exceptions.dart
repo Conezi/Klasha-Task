@@ -1,54 +1,53 @@
-
-class ApiException implements Exception{
+class ApiException implements Exception {
   final String message;
   ApiException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message;
   }
 }
 
-class NetworkException implements Exception{
+class NetworkException implements Exception {
   final String message;
   NetworkException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message;
   }
 }
 
-class BadRequestException implements Exception{
+class BadRequestException implements Exception {
   final String? message;
   BadRequestException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message!;
   }
 }
 
-class UnauthorisedException implements Exception{
+class UnauthorisedException implements Exception {
   final String? message;
   UnauthorisedException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message!;
   }
 }
 
-class FileNotFoundException implements Exception{
+class FileNotFoundException implements Exception {
   final String? message;
   FileNotFoundException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message!;
   }
 }
 
-class AlreadyRegisteredException implements Exception{
+class AlreadyRegisteredException implements Exception {
   final String? message;
   AlreadyRegisteredException(this.message);
   @override
-  String toString(){
+  String toString() {
     return message!;
   }
 }

@@ -19,14 +19,14 @@ void main() {
 
   final ingredients = List<Ingredient>.from(
       RecipesDataFactory.ingredients.map((x) => Ingredient.fromMap(x)));
-  final recipes = List<Recipe>.from(RecipesDataFactory.recipes.map((x) => Recipe.fromMap(x)));
+  final recipes = List<Recipe>.from(
+      RecipesDataFactory.recipes.map((x) => Recipe.fromMap(x)));
 
   setUp(() {
     recipesRepository = MockRecipesRepository();
     recipesViewModel = MockRecipesViewModel();
     recipesCubit = RecipesCubit(
-        repository: recipesRepository,
-        viewModel: recipesViewModel);
+        repository: recipesRepository, viewModel: recipesViewModel);
   });
 
   tearDown(() {
@@ -52,29 +52,27 @@ void main() {
 
     blocTest(
         'emits [Loading(), RecipesNetworkErr()]'
-            ' when error occurred while fetching ingredients',
+        ' when error occurred while fetching ingredients',
         build: () {
-          when(() => recipesRepository.fetchIngredient()).thenThrow(
-              NetworkException('An error occurred'));
+          when(() => recipesRepository.fetchIngredient())
+              .thenThrow(NetworkException('An error occurred'));
           return recipesCubit;
         },
         act: (RecipesCubit cubit) => cubit.fetchIngredient(),
-        expect: () => [
-          Loading(),
-          const RecipesNetworkErr('An error occurred')
-        ]);
+        expect: () =>
+            [Loading(), const RecipesNetworkErr('An error occurred')]);
   });
 
   group('Test fetch recipes in recipes cubit ', () {
     blocTest(
         'emits [Loading(), RecipesLoaded()]'
-            ' when request was successful and has a valid data',
+        ' when request was successful and has a valid data',
         build: () {
           when(() => recipesRepository.fetchRecipes([])).thenAnswer(
-                (_) => Future.value(recipes),
+            (_) => Future.value(recipes),
           );
           when(() => recipesViewModel.setRecipes(recipes)).thenAnswer(
-                (_) => Future.value(recipes),
+            (_) => Future.value(recipes),
           );
           return recipesCubit;
         },
@@ -83,17 +81,14 @@ void main() {
 
     blocTest(
         'emits [Loading(), RecipesNetworkErr()]'
-            ' when error occurred while fetching recipes',
+        ' when error occurred while fetching recipes',
         build: () {
-          when(() => recipesRepository.fetchRecipes([])).thenThrow(
-              NetworkException('An error occurred'));
+          when(() => recipesRepository.fetchRecipes([]))
+              .thenThrow(NetworkException('An error occurred'));
           return recipesCubit;
         },
         act: (RecipesCubit cubit) => cubit.fetchRecipes([]),
-        expect: () => [
-          Loading(),
-          const RecipesNetworkErr('An error occurred')
-        ]);
+        expect: () =>
+            [Loading(), const RecipesNetworkErr('An error occurred')]);
   });
-
 }

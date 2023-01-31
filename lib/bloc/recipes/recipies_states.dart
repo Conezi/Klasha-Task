@@ -1,10 +1,9 @@
-
 import 'package:equatable/equatable.dart';
 
 import '../../models/data_models/ingredient.dart';
 import '../../models/data_models/recipe.dart';
 
-abstract class RecipesStates extends Equatable{
+abstract class RecipesStates extends Equatable {
   const RecipesStates();
 }
 
@@ -13,7 +12,6 @@ class InitialState extends RecipesStates {
 
   @override
   List<Object?> get props => [];
-
 }
 
 class Loading extends RecipesStates {

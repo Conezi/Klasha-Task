@@ -7,5 +7,3 @@ import '../models/view_models/recipes_view_model.dart';
 Future<void> init(GetIt injector) async {
   injector.registerSingleton<RecipesViewModel>(RecipesViewModel());
 }
-
- 
